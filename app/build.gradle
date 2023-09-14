@@ -64,7 +64,7 @@ dependencies {
 
     // Data binding
     kapt "com.android.databinding:compiler:3.2.0-alpha10"
-    kapt "androidx.databinding:databinding-common:4.0.2"
+    kapt "androidx.databinding:databinding-common:8.1.1"
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha01"
@@ -91,4 +91,8 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.todkars:shimmer-recyclerview:0.4.0'
 }
