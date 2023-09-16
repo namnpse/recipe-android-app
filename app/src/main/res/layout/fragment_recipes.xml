@@ -9,7 +9,9 @@
     tools:context=".presentation.RecipesFragment">
 
     <com.todkars.shimmer.ShimmerRecyclerView
-        android:id="@+id/shimmer_recycler_view"
+        android:id="@+id/shimmerRecyclerView"
+        app:shimmer_recycler_item_count="4"
+        app:shimmer_recycler_layout="@layout/placeholder_item_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -44,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/shimmer_recycler_view"
+        app:layout_constraintTop_toTopOf="@+id/shimmerRecyclerView"
         app:layout_constraintVertical_bias="0.5" />
 
     <TextView
