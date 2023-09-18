@@ -1,4 +1,4 @@
-package com.namnp.modernfoodrecipeandroidapp.presentation
+package com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
