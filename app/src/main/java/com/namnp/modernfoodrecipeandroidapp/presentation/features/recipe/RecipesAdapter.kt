@@ -8,33 +8,17 @@ import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
 import com.namnp.modernfoodrecipeandroidapp.data.models.Result
 import com.namnp.modernfoodrecipeandroidapp.databinding.RecipeItemLayoutBinding
 
-class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
+class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
 
     private var recipes = emptyList<Result>()
 
-    class MyViewHolder(private val binding: RecipeItemLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(result: Result){
-            binding.result = result
-            binding.executePendingBindings()
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): MyViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RecipeItemLayoutBinding.inflate(layoutInflater, parent, false)
-                return MyViewHolder(binding)
-            }
-        }
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = RecipeItemLayoutBinding.inflate(layoutInflater, parent, false)
+        return RecipeViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder.from(parent)
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         val currentRecipe = recipes[position]
         holder.bind(currentRecipe)
     }
@@ -44,10 +28,18 @@ class RecipesAdapter : RecyclerView.Adapter<RecipesAdapter.MyViewHolder>() {
     }
 
     fun setData(newData: FoodRecipe){
-        val recipesDiffUtil =
-            RecipesDiffUtil(recipes, newData.results)
+        val recipesDiffUtil = RecipesDiffUtil(recipes, newData.results)
         val diffUtilResult = DiffUtil.calculateDiff(recipesDiffUtil)
         recipes = newData.results
         diffUtilResult.dispatchUpdatesTo(this)
+    }
+
+    class RecipeViewHolder(private val binding: RecipeItemLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(result: Result){
+            binding.result = result
+            binding.executePendingBindings()
+        }
     }
 }
