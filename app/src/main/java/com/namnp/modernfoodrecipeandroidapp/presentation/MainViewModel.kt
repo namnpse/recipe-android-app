@@ -44,6 +44,7 @@ class MainViewModel @ViewModelInject constructor(
                 val response = repository.remoteRecipes.getRecipes(queries)
                 recipesResponse.value = handleFoodRecipesResponse(response)
 
+                // SAVE TO LOCAL DB
                 recipesResponse.value?.data?.let { foodRecipe ->
                     cacheRecipesToLocal(foodRecipe)
                 }
