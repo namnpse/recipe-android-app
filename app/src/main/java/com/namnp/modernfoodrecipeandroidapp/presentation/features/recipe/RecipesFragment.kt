@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
+import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.android.synthetic.main.fragment_recipes.view.shimmerRecyclerView
 import kotlinx.coroutines.launch
 
@@ -84,7 +85,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun loadLocalRecipesData() {
         lifecycleScope.launch {
-            mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
+            mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
                 if (database.isNotEmpty()) {
                     recipesAdapter.setData(database[0].foodRecipe)
                 }
