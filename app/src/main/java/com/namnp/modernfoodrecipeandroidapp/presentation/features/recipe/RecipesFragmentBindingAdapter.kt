@@ -8,7 +8,7 @@ import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesEntity
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 
-class RecipesBinding {
+class RecipesFragmentBindingAdapter {
 
     companion object {
 
