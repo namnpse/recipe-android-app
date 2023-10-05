@@ -9,10 +9,12 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentRecipesBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
+import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.bottomsheet.RecipesBottomSheetDirections
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.coroutines.launch
@@ -25,6 +27,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
+
+    private val navArgs by navArgs<RecipesFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,12 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         getRecipes()
 
         binding.recipesFab.setOnClickListener {
+            // Approach 1
             findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+            // Approach 2
+            val action =
+                RecipesFragmentDirections.actionRecipesFragmentToRecipesBottomSheet()
+            findNavController().navigate(action)
         }
 
         return binding.root
@@ -95,7 +104,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private fun loadLocalRecipesData() {
         lifecycleScope.launch {
             mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
-                if (database.isNotEmpty()) {
+                if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
                     recipesAdapter.setData(database[0].foodRecipe)
                 }
             }
