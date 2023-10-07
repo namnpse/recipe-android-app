@@ -46,6 +46,8 @@
 
         <ImageView
             android:id="@+id/error_imageView"
+            bindRemoteDataToImageView="@{mainViewModel.recipesResponse}"
+            bindLocalDataToImageView="@{mainViewModel.localRecipes}"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:alpha="0.5"
@@ -63,8 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:alpha="0.5"
-            readApiResponse2="@{mainViewModel.recipesResponse}"
-            readLocalRecipe="@{mainViewModel.localRecipes}"
+            bindRemoteDataToTextView="@{mainViewModel.recipesResponse}"
+            bindLocalDataToTextView="@{mainViewModel.localRecipes}"
             android:text="No Internet Connection."
             android:textSize="18sp"
             android:textStyle="bold"

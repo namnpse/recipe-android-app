@@ -12,23 +12,23 @@ class RecipesFragmentBindingAdapter {
 
     companion object {
 
-        @BindingAdapter("readApiResponse", "readLocalRecipe", requireAll = true)
+        @BindingAdapter("bindRemoteDataToImageView", "bindLocalDataToImageView", requireAll = true)
         @JvmStatic
         fun errorImageViewVisibility(
             imageView: ImageView,
             apiResponse: NetworkResult<FoodRecipe>?,
-            database: List<RecipesEntity>?
+//            database: List<RecipesEntity>?
         ) {
-            if (apiResponse is NetworkResult.Error && database.isNullOrEmpty()) {
-                imageView.visibility = View.VISIBLE
-            } else if (apiResponse is NetworkResult.Loading) {
-                imageView.visibility = View.INVISIBLE
-            } else if (apiResponse is NetworkResult.Success) {
-                imageView.visibility = View.INVISIBLE
-            }
+//            if (apiResponse is NetworkResult.Error && database.isNullOrEmpty()) {
+//                imageView.visibility = View.VISIBLE
+//            } else if (apiResponse is NetworkResult.Loading) {
+//                imageView.visibility = View.INVISIBLE
+//            } else if (apiResponse is NetworkResult.Success) {
+//                imageView.visibility = View.INVISIBLE
+//            }
         }
 
-        @BindingAdapter("readApiResponse2", "readLocalRecipe2", requireAll = true)
+        @BindingAdapter("bindRemoteDataToTextView", "bindLocalDataToTextView", requireAll = true)
         @JvmStatic
         fun errorTextViewVisibility(
             textView: TextView,
