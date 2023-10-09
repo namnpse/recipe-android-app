@@ -1,6 +1,7 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentRecipesBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.bottomsheet.RecipesBottomSheetDirections
+import com.namnp.modernfoodrecipeandroidapp.util.NetworkListener
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.coroutines.launch
@@ -29,6 +31,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding get() = _binding!!
 
     private val navArgs by navArgs<RecipesFragmentArgs>()
+
+    private lateinit var networkListener: NetworkListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,13 +51,28 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         setupRecyclerView()
         getRecipes()
 
+        lifecycleScope.launch {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext())
+                .collect { status ->
+                    Log.d("NetworkListener", status.toString())
+                    recipesViewModel.networkStatus = status
+                    recipesViewModel.showNetworkStatus()
+                }
+        }
+
         binding.recipesFab.setOnClickListener {
-            // Approach 1
-            findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
-            // Approach 2
-            val action =
-                RecipesFragmentDirections.actionRecipesFragmentToRecipesBottomSheet()
-            findNavController().navigate(action)
+
+            if (recipesViewModel.networkStatus) {
+                // Approach 1
+                findNavController().navigate(R.id.action_recipesFragment_to_recipesBottomSheet)
+                // Approach 2
+//                val action =
+//                    RecipesFragmentDirections.actionRecipesFragmentToRecipesBottomSheet()
+//                findNavController().navigate(action)
+            } else {
+                recipesViewModel.showNetworkStatus()
+            }
         }
 
         return binding.root
