@@ -4,6 +4,7 @@ import android.app.Application
 import android.widget.Toast
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_DIET_TYPE
@@ -30,7 +31,9 @@ class RecipesViewModel @ViewModelInject constructor(
 
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
 
+    var isBackOnline = false
     var networkStatus = false
+    val getBackOnlineStatus = dataStoreRepository.readBackOnline.asLiveData()
 
     fun saveMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) =
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,7 +63,18 @@ class RecipesViewModel @ViewModelInject constructor(
     fun showNetworkStatus() {
         if (!networkStatus) {
             Toast.makeText(getApplication(), "No Internet Connection.", Toast.LENGTH_SHORT).show()
+            saveBackOnline(true)
+        } else {
+            if (isBackOnline) {
+                Toast.makeText(getApplication(), "Back online.", Toast.LENGTH_SHORT).show()
+                saveBackOnline(false)
+            }
         }
     }
+
+    private fun saveBackOnline(backOnline: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.saveBackOnline(backOnline)
+        }
 
 }

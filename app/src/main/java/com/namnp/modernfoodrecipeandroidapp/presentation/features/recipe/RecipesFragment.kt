@@ -19,8 +19,10 @@ import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.bottoms
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkListener
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private lateinit var mainViewModel: MainViewModel
@@ -36,8 +38,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        recipesViewModel = ViewModelProvider(requireActivity()).get(RecipesViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+        recipesViewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -58,6 +60,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                     Log.d("NetworkListener", status.toString())
                     recipesViewModel.networkStatus = status
                     recipesViewModel.showNetworkStatus()
+                    loadLocalRecipesData()
                 }
         }
 
@@ -73,6 +76,10 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             } else {
                 recipesViewModel.showNetworkStatus()
             }
+        }
+
+        recipesViewModel.getBackOnlineStatus.observe(viewLifecycleOwner) {
+            recipesViewModel.isBackOnline = it
         }
 
         return binding.root
