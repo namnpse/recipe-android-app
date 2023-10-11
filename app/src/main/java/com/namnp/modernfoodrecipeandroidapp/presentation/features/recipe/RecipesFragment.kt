@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RecipesFragment : Fragment(R.layout.fragment_recipes) {
+class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryTextListener {
 
     private lateinit var mainViewModel: MainViewModel
     private val recipesAdapter by lazy { RecipesAdapter() }
@@ -51,6 +54,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         binding.mainViewModel = mainViewModel
 
         setupRecyclerView()
+        setHasOptionsMenu(true)
         getRecipes()
 
         lifecycleScope.launch {
@@ -149,6 +153,23 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
 
     private fun hideShimmerEffect() {
         binding.shimmerRecyclerView.hideShimmer()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.recipes_menu, menu)
+
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(p0: String?): Boolean {
+        return true
     }
 
     override fun onDestroy() {
