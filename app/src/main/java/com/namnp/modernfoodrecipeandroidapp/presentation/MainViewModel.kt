@@ -32,9 +32,14 @@ class MainViewModel @ViewModelInject constructor(
 
     /** REMOTE DATA */
     var recipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
+    var searchedRecipesResponse: MutableLiveData<NetworkResult<FoodRecipe>> = MutableLiveData()
 
     fun getRecipes(queries: Map<String, String>) = viewModelScope.launch {
         getRemoteRecipes(queries)
+    }
+
+    fun searchRecipes(searchQuery: Map<String, String>) = viewModelScope.launch {
+        searchRecipesSafeCall(searchQuery)
     }
 
     private suspend fun getRemoteRecipes(queries: Map<String, String>) {
@@ -49,7 +54,7 @@ class MainViewModel @ViewModelInject constructor(
                     cacheRecipesToLocal(foodRecipe)
                 }
             } catch (e: Exception) {
-                recipesResponse.value = NetworkResult.Error("Recipes not found.")
+                recipesResponse.value = NetworkResult.Error("Can not found the recipe.")
             }
         } else {
             recipesResponse.value = NetworkResult.Error("No Internet Connection.")
@@ -80,6 +85,20 @@ class MainViewModel @ViewModelInject constructor(
     private fun cacheRecipesToLocal(foodRecipe: FoodRecipe) {
         val recipesEntity = RecipesEntity(foodRecipe)
         addRecipes(recipesEntity)
+    }
+
+    private suspend fun searchRecipesSafeCall(searchQuery: Map<String, String>) {
+        searchedRecipesResponse.value = NetworkResult.Loading()
+        if (hasInternetConnection()) {
+            try {
+                val response = repository.remoteRecipes.searchRecipes(searchQuery)
+                searchedRecipesResponse.value = handleFoodRecipesResponse(response)
+            } catch (e: Exception) {
+                searchedRecipesResponse.value = NetworkResult.Error("Can not found the recipe.")
+            }
+        } else {
+            searchedRecipesResponse.value = NetworkResult.Error("No Internet Connection.")
+        }
     }
 
     private fun hasInternetConnection() = getApplication<Application>().hasInternetConnection()

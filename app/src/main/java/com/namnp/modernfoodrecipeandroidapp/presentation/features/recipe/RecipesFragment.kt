@@ -121,7 +121,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
             // GET LOCAL FIRST
             mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
                 if (database.isNotEmpty()) {
-                    recipesAdapter.setData(database[0].foodRecipe)
+                    recipesAdapter.setData(database.first().foodRecipe)
                     hideShimmerEffect()
                 } else {
                     // GET REMOTE
@@ -135,7 +135,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
         lifecycleScope.launch {
             mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
                 if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
-                    recipesAdapter.setData(database[0].foodRecipe)
+                    recipesAdapter.setData(database.first().foodRecipe)
                 }
             }
         }
@@ -164,12 +164,43 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
         searchView?.setOnQueryTextListener(this)
     }
 
-    override fun onQueryTextSubmit(p0: String?): Boolean {
+    override fun onQueryTextChange(p0: String?): Boolean {
         return true
     }
 
-    override fun onQueryTextChange(p0: String?): Boolean {
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if(query != null) {
+            searchRecipeData(query)
+        }
         return true
+    }
+
+    private fun searchRecipeData(searchQuery: String) {
+        showShimmerEffect()
+        mainViewModel.searchRecipes(recipesViewModel.applySearchRecipeQuery(searchQuery))
+        mainViewModel.searchedRecipesResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    hideShimmerEffect()
+                    val foodRecipe = response.data
+                    foodRecipe?.let { recipesAdapter.setData(it) }
+                }
+
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    loadLocalRecipesData()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is NetworkResult.Loading -> {
+                    showShimmerEffect()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
