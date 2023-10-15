@@ -43,6 +43,8 @@ android {
 
 dependencies {
 
+    def room_version = '2.5.2'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
     implementation 'androidx.core:core-ktx:1.3.2'
@@ -60,10 +62,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.4'
 
     // Room components
-    implementation "androidx.room:room-runtime:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
-    implementation "androidx.room:room-ktx:2.2.5"
-    androidTestImplementation "androidx.room:room-testing:2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // Data binding (can be removed -> Gradle auto get the correct Data binding version)
 //    kapt "com.android.databinding:compiler:3.2.0-alpha10"
