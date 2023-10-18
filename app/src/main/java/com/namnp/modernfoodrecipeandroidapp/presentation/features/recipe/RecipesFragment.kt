@@ -25,7 +25,7 @@ import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryTextListener {
 
     private lateinit var mainViewModel: MainViewModel
