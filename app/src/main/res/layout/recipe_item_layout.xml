@@ -70,6 +70,7 @@
                     android:layout_marginTop="12dp"
                     android:ellipsize="end"
                     android:maxLines="3"
+                    parseHtml="@{result.summary}"
                     android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                     android:textColor="@color/darkGray"
                     app:layout_constraintEnd_toEndOf="@+id/title_textView"

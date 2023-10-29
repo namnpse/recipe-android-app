@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import com.namnp.modernfoodrecipeandroidapp.R
 import coil.load
 import com.namnp.modernfoodrecipeandroidapp.data.models.Result
+import org.jsoup.Jsoup
 
 class RecipesItemBindingAdapter {
 
@@ -74,6 +75,15 @@ class RecipesItemBindingAdapter {
                         )
                     }
                 }
+            }
+        }
+
+        @BindingAdapter("parseHtml")
+        @JvmStatic
+        fun parseHtml(textView: TextView, description: String?){
+            if(description != null) {
+                val desc = Jsoup.parse(description).text()
+                textView.text = desc
             }
         }
 
