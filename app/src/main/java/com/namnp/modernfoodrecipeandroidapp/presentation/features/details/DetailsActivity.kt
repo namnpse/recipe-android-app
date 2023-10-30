@@ -7,6 +7,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
 import com.namnp.modernfoodrecipeandroidapp.R
+import com.namnp.modernfoodrecipeandroidapp.presentation.common.PagerAdapter
+import com.namnp.modernfoodrecipeandroidapp.presentation.features.ingredients.IngredientsFragment
+import com.namnp.modernfoodrecipeandroidapp.presentation.features.instructions.InstructionsFragment
+import com.namnp.modernfoodrecipeandroidapp.presentation.features.overview.OverviewFragment
 import kotlinx.android.synthetic.main.activity_details.*
 
 class DetailsActivity : AppCompatActivity() {
