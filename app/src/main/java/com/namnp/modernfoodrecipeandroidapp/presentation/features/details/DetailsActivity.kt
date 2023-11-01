@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.navArgs
 import com.namnp.modernfoodrecipeandroidapp.R
+import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.RECIPE_RESULT_KEY
 import com.namnp.modernfoodrecipeandroidapp.presentation.common.PagerAdapter
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.ingredients.IngredientsFragment
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.instructions.InstructionsFragment
@@ -36,7 +37,7 @@ class DetailsActivity : AppCompatActivity() {
         titles.add("Instructions")
 
         val resultBundle = Bundle()
-        resultBundle.putParcelable("recipeBundle", args.result)
+        resultBundle.putParcelable(RECIPE_RESULT_KEY, args.result)
 
         val adapter = PagerAdapter(
             resultBundle,
