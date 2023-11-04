@@ -23,6 +23,7 @@ import com.namnp.modernfoodrecipeandroidapp.util.NetworkListener
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
