@@ -6,12 +6,28 @@ import javax.inject.Inject
 class RecipesLocalDataSource @Inject constructor(
     private val recipesDao: RecipesDao
 ) {
-    fun readDatabase(): Flow<List<RecipesEntity>> {
+    fun getRecipes(): Flow<List<RecipesEntity>> {
         return recipesDao.getRecipes()
     }
 
-    suspend fun insertRecipes(recipesEntity: RecipesEntity) {
+    suspend fun addRecipes(recipesEntity: RecipesEntity) {
         recipesDao.addRecipes(recipesEntity)
+    }
+
+    fun getFavoriteRecipes(): Flow<List<FavoritesEntity>> {
+        return recipesDao.getFavoriteRecipes()
+    }
+
+    suspend fun insertFavoriteRecipes(favoritesEntity: FavoritesEntity) {
+        recipesDao.addFavoriteRecipe(favoritesEntity)
+    }
+
+    suspend fun deleteFavoriteRecipe(favoritesEntity: FavoritesEntity) {
+        recipesDao.deleteFavoriteRecipe(favoritesEntity)
+    }
+
+    suspend fun deleteAllFavoriteRecipes() {
+        recipesDao.deleteAllFavoriteRecipes()
     }
 
 }
