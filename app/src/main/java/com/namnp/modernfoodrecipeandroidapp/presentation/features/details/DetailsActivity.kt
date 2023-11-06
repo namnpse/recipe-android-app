@@ -26,6 +26,9 @@ class DetailsActivity : AppCompatActivity() {
     private val args by navArgs<DetailsActivityArgs>()
     private val mainViewModel: MainViewModel by viewModels()
 
+    private var recipeIsSaved = false
+    private var savedRecipeId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
@@ -68,6 +71,7 @@ class DetailsActivity : AppCompatActivity() {
         mainViewModel.addFavoriteRecipe(favoritesEntity)
         changeMenuItemColor(item, R.color.yellow)
         showSnackBar("Recipe saved.")
+        recipeIsSaved = true
     }
 
     private fun showSnackBar(message: String) {
@@ -90,6 +94,10 @@ class DetailsActivity : AppCompatActivity() {
                 for (savedRecipe in favoritesEntity) {
                     if (savedRecipe.result.recipeId == args.result.recipeId) {
                         changeMenuItemColor(menuItem, R.color.yellow)
+                        recipeIsSaved = true
+                        savedRecipeId = savedRecipe.id
+                    } else {
+                        changeMenuItemColor(menuItem, R.color.white)
                     }
                 }
             } catch (e: Exception) {
@@ -98,11 +106,25 @@ class DetailsActivity : AppCompatActivity() {
         })
     }
 
+    private fun removeRecipeFromFavorites(item: MenuItem) {
+        val favoritesEntity =
+            FavoritesEntity(
+                savedRecipeId,
+                args.result
+            )
+        mainViewModel.deleteFavoriteRecipe(favoritesEntity)
+        changeMenuItemColor(item, R.color.white)
+        showSnackBar("Removed from Favorites.")
+        recipeIsSaved = false
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
         } else if (item.itemId == R.id.save_to_favorites_menu) {
             saveRecipeToFavorites(item)
+        } else if (item.itemId == R.id.save_to_favorites_menu && recipeIsSaved) {
+            removeRecipeFromFavorites(item)
         }
         return super.onOptionsItemSelected(item)
     }
