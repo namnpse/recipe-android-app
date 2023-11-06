@@ -2,6 +2,7 @@ package com.namnp.modernfoodrecipeandroidapp.presentation.features.details
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -18,6 +19,7 @@ import com.namnp.modernfoodrecipeandroidapp.presentation.features.ingredients.In
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.instructions.InstructionsFragment
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.overview.OverviewFragment
 import kotlinx.android.synthetic.main.activity_details.*
+import java.lang.Exception
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -82,6 +84,20 @@ class DetailsActivity : AppCompatActivity() {
         item.icon.setTint(ContextCompat.getColor(this, color))
     }
 
+    private fun checkSavedRecipes(menuItem: MenuItem) {
+        mainViewModel.localFavoriteRecipes.observe(this, { favoritesEntity ->
+            try {
+                for (savedRecipe in favoritesEntity) {
+                    if (savedRecipe.result.recipeId == args.result.recipeId) {
+                        changeMenuItemColor(menuItem, R.color.yellow)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d("DetailsActivity", e.message.toString())
+            }
+        })
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
@@ -93,6 +109,9 @@ class DetailsActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.details_menu, menu)
+        menu?.findItem(R.id.save_to_favorites_menu)?.let {
+            checkSavedRecipes(it)
+        }
         return true
     }
 
