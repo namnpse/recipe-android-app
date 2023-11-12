@@ -1,6 +1,7 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation.features.favorite
 
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -75,7 +76,12 @@ class FavoriteRecipesAdapter(
 
     override fun onCreateActionMode(actionMode: ActionMode?, menu: Menu?): Boolean {
         actionMode?.menuInflater?.inflate(R.menu.favorites_menu, menu)
+        applyStatusBarColor(R.color.contextualStatusBarColor)
         return true
+    }
+
+    private fun applyStatusBarColor(color: Int){
+        requireActivity.window.statusBarColor = ContextCompat.getColor(requireActivity, color)
     }
 
     override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean = true
