@@ -2,11 +2,14 @@ package com.namnp.modernfoodrecipeandroidapp.presentation.features.favorite
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
 import com.namnp.modernfoodrecipeandroidapp.databinding.FavoriteRecipeItemBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.RecipesDiffUtil
+import kotlinx.android.synthetic.main.favorite_recipe_item.view.*
+import kotlinx.android.synthetic.main.fragment_favorite_recipes.view.*
 
 class FavoriteRecipesAdapter : RecyclerView.Adapter<FavoriteRecipesAdapter.MyViewHolder>() {
 
@@ -37,6 +40,14 @@ class FavoriteRecipesAdapter : RecyclerView.Adapter<FavoriteRecipesAdapter.MyVie
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val selectedRecipe = favoriteRecipes[position]
         holder.bind(selectedRecipe)
+
+        holder.itemView.recipesItemLayout.setOnClickListener {
+            val action =
+                FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
+                    selectedRecipe.result
+                )
+            holder.itemView.findNavController().navigate(action)
+        }
     }
 
     override fun getItemCount(): Int {

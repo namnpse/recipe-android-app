@@ -26,6 +26,9 @@
         android:name="com.namnp.modernfoodrecipeandroidapp.presentation.features.favorite.FavoriteRecipesFragment"
         android:label="Favorites"
         tools:layout="@layout/fragment_favorite_recipes" />
+    <action
+        android:id="@+id/action_favoriteRecipesFragment_to_detailsActivity"
+        app:destination="@id/detailsActivity" />
     <fragment
         android:id="@+id/foodJokeFragment"
         android:name="com.namnp.modernfoodrecipeandroidapp.presentation.features.food_joke.FoodJokeFragment"

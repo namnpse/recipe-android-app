@@ -8,12 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentFavoriteRecipesBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_favorite_recipes.view.*
-
 @AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
 
