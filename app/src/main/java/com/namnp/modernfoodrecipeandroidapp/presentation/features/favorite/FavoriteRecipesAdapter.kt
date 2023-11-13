@@ -11,15 +11,18 @@ import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
 import com.namnp.modernfoodrecipeandroidapp.databinding.FavoriteRecipeItemBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.RecipesDiffUtil
 import kotlinx.android.synthetic.main.favorite_recipe_item.view.*
-import kotlinx.android.synthetic.main.fragment_favorite_recipes.view.*
 
 class FavoriteRecipesAdapter(
     private val requireActivity: FragmentActivity,
-) : RecyclerView.Adapter<FavoriteRecipesAdapter.MyViewHolder>(), ActionMode.Callback {
+) : RecyclerView.Adapter<FavoriteRecipesAdapter.RecipeViewHolder>(), ActionMode.Callback {
 
     private var favoriteRecipes = emptyList<FavoritesEntity>()
 
-    class MyViewHolder(private val binding: FavoriteRecipeItemBinding) :
+    private var isMultiSelection = false
+    private var selectedRecipes = arrayListOf<FavoritesEntity>()
+    private var recipesViewHolders = arrayListOf<RecipeViewHolder>()
+
+    class RecipeViewHolder(private val binding: FavoriteRecipeItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(favoritesEntity: FavoritesEntity) {
@@ -28,38 +31,69 @@ class FavoriteRecipesAdapter(
         }
 
         companion object {
-            fun from(parent: ViewGroup): MyViewHolder {
+            fun from(parent: ViewGroup): RecipeViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = FavoriteRecipeItemBinding.inflate(layoutInflater, parent, false)
-                return MyViewHolder(binding)
+                return RecipeViewHolder(binding)
             }
         }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+        return RecipeViewHolder.from(parent)
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val selectedRecipe = favoriteRecipes[position]
-        holder.bind(selectedRecipe)
+    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        val currentRecipe = favoriteRecipes[position]
+        holder.bind(currentRecipe)
 
         holder.itemView.recipesItemLayout.setOnClickListener {
-            val action =
-                FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
-                    selectedRecipe.result
-                )
-            holder.itemView.findNavController().navigate(action)
+            if (isMultiSelection) {
+                applySelection(holder, currentRecipe)
+            } else {
+                val action =
+                    FavoriteRecipesFragmentDirections.actionFavoriteRecipesFragmentToDetailsActivity(
+                        currentRecipe.result
+                    )
+                holder.itemView.findNavController().navigate(action)
+            }
         }
 
         /**
          * Handle long click
          * */
         holder.itemView.recipesItemLayout.setOnLongClickListener {
-            requireActivity.startActionMode(this)
-            true
+            if (!isMultiSelection) {
+                isMultiSelection = true
+                requireActivity.startActionMode(this)
+                applySelection(holder, currentRecipe)
+                true
+            } else {
+                isMultiSelection = false
+                false
+            }
         }
+
+        recipesViewHolders.add(holder)
+    }
+
+    private fun applySelection(holder: RecipeViewHolder, currentRecipe: FavoritesEntity) {
+        if (selectedRecipes.contains(currentRecipe)) {
+            selectedRecipes.remove(currentRecipe)
+            changeRecipeStyle(holder, R.color.cardBackgroundColor, R.color.strokeColor)
+        } else {
+            selectedRecipes.add(currentRecipe)
+            changeRecipeStyle(holder, R.color.cardBackgroundLightColor, R.color.colorPrimary)
+        }
+    }
+
+    private fun changeRecipeStyle(holder: RecipeViewHolder, backgroundColor: Int, strokeColor: Int) {
+        holder.itemView.recipesItemLayout.setBackgroundColor(
+            ContextCompat.getColor(requireActivity, backgroundColor)
+        )
+        holder.itemView.favorite_row_cardView.strokeColor =
+            ContextCompat.getColor(requireActivity, strokeColor)
     }
 
     override fun getItemCount(): Int {
@@ -88,5 +122,11 @@ class FavoriteRecipesAdapter(
 
     override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean = true
 
-    override fun onDestroyActionMode(p0: ActionMode?) {}
+    override fun onDestroyActionMode(p0: ActionMode?) {
+        recipesViewHolders.forEach { holder ->
+            changeRecipeStyle(holder, R.color.cardBackgroundColor, R.color.strokeColor)
+        }
+        isMultiSelection = false
+        selectedRecipes.clear()
+    }
 }
