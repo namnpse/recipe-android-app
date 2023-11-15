@@ -65,7 +65,7 @@
 
                 <TextView
                     android:id="@+id/favorite_description_textView"
-                    android:text="@{favoritesEntity.result.summary}"
+                    parseHtml="@{favoritesEntity.result.summary}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
