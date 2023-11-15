@@ -165,6 +165,10 @@ class FavoriteRecipesAdapter(
             .show()
     }
 
+    fun clearContextualActionMode() {
+        actionMode?.finish()
+    }
+
     override fun onDestroyActionMode(p0: ActionMode?) {
         recipesViewHolders.forEach { holder ->
             changeRecipeStyle(holder, R.color.cardBackgroundColor, R.color.strokeColor)
