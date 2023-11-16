@@ -1,13 +1,13 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation.features.favorite
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentFavoriteRecipesBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +37,7 @@ class FavoriteRecipesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView(binding.favoriteRecipesRecyclerView)
+        setHasOptionsMenu(true)
 
         mainViewModel.localFavoriteRecipes.observe(viewLifecycleOwner, { favoritesEntity ->
             favoriteRecipesAdapter.updateData(favoritesEntity)
@@ -46,6 +47,24 @@ class FavoriteRecipesFragment : Fragment() {
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.adapter = favoriteRecipesAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.favorite_recipes_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.deleteAll_favorite_recipes_menu){
+            mainViewModel.deleteAllFavoriteRecipes()
+            showSnackBar()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSnackBar(){
+        Snackbar.make(binding.root, "All recipes are removed", Snackbar.LENGTH_SHORT)
+            .setAction("OK"){}
+            .show()
     }
 
     override fun onDestroy() {
