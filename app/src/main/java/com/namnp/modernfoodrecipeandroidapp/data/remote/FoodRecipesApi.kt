@@ -1,8 +1,10 @@
 package com.namnp.modernfoodrecipeandroidapp.data.remote
 
+import com.namnp.modernfoodrecipeandroidapp.data.models.FoodJoke
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface FoodRecipesApi {
@@ -17,5 +19,9 @@ interface FoodRecipesApi {
         @QueryMap searchQuery: Map<String, String>
     ): Response<FoodRecipe>
 
+    @GET("food/jokes/random")
+    suspend fun getFoodJoke(
+        @Query("apiKey") apiKey: String
+    ): Response<FoodJoke>
 
 }
