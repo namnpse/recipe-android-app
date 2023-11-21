@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
 import com.namnp.modernfoodrecipeandroidapp.data.FoodRecipesRepository
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
 import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesEntity
@@ -120,8 +121,8 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getFoodJoke(apiKey: String) = viewModelScope.launch {
-        getRemoteFoodJoke(apiKey)
+    fun getFoodJoke() = viewModelScope.launch {
+        getRemoteFoodJoke(API_KEY)
     }
 
     private suspend fun getRemoteFoodJoke(apiKey: String) {
