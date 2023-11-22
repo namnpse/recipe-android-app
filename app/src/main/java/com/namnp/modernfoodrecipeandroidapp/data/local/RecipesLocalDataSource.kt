@@ -1,6 +1,5 @@
 package com.namnp.modernfoodrecipeandroidapp.data.local
 
-import com.namnp.modernfoodrecipeandroidapp.data.models.FoodJoke
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class RecipesLocalDataSource @Inject constructor(
         recipesDao.deleteAllFavoriteRecipes()
     }
 
-    fun getFoodJoke(): Flow<List<FoodJoke>> {
+    fun getFoodJoke(): Flow<List<FoodJokeEntity>> {
         return recipesDao.getFoodJoke()
     }
 

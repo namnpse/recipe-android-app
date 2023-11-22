@@ -57,9 +57,9 @@ class FoodJokeFragment : Fragment() {
 
     private fun loadDataFromCache(){
         lifecycleScope.launch {
-            mainViewModel.foodJokeResponse.observe(viewLifecycleOwner, { res ->
-                res?.data?.text?.let {
-                    binding.foodJokeTextView.text = it
+            mainViewModel.localFoodJoke.observe(viewLifecycleOwner, { localFoodJoke ->
+                if(!localFoodJoke.isNullOrEmpty()){
+                    binding.foodJokeTextView.text = localFoodJoke.first().foodJoke.text
                 }
             })
         }

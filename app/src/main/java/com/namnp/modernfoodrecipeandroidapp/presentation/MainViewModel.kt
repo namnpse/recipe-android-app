@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
 import com.namnp.modernfoodrecipeandroidapp.data.FoodRecipesRepository
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
+import com.namnp.modernfoodrecipeandroidapp.data.local.FoodJokeEntity
 import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesEntity
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodJoke
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
@@ -28,6 +29,7 @@ class MainViewModel @ViewModelInject constructor(
     /** LOCAL DATA */
     val localRecipes: LiveData<List<RecipesEntity>> = repository.localRecipes.getRecipes().asLiveData()
     val localFavoriteRecipes: LiveData<List<FavoritesEntity>> = repository.localRecipes.getFavoriteRecipes().asLiveData()
+    val localFoodJoke: LiveData<List<FoodJokeEntity>> = repository.localRecipes.getFoodJoke().asLiveData()
 
     private fun addRecipes(recipesEntity: RecipesEntity) =
         viewModelScope.launch(Dispatchers.IO) {

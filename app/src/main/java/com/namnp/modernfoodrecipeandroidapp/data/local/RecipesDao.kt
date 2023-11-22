@@ -1,7 +1,6 @@
 package com.namnp.modernfoodrecipeandroidapp.data.local
 
 import androidx.room.*
-import com.namnp.modernfoodrecipeandroidapp.data.models.FoodJoke
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,6 +28,6 @@ interface RecipesDao {
     suspend fun addFoodJoke(foodJokeEntity: FoodJokeEntity)
 
     @Query("SELECT * FROM food_joke_table ORDER BY id ASC")
-    fun getFoodJoke(): Flow<List<FoodJoke>>
+    fun getFoodJoke(): Flow<List<FoodJokeEntity>>
 
 }
