@@ -1,11 +1,10 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation.features.food_joke
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,11 +22,14 @@ class FoodJokeFragment : Fragment() {
 
     private var _binding: FragmentFoodJokeBinding? = null
     private val binding get() = _binding!!
+    private var foodJoke = "No Food Joke"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+
         _binding = FragmentFoodJokeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.mainViewModel = mainViewModel
@@ -37,6 +39,9 @@ class FoodJokeFragment : Fragment() {
             when(response){
                 is NetworkResult.Success -> {
                     binding.foodJokeTextView.text = response.data?.text
+                    response.data?.let {
+                        foodJoke = it.text
+                    }
                 }
                 is NetworkResult.Error -> {
                     loadDataFromCache()
@@ -63,6 +68,22 @@ class FoodJokeFragment : Fragment() {
                 }
             })
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.food_joke_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.share_food_joke_menu){
+            val shareIntent = Intent().apply {
+                this.action = Intent.ACTION_SEND
+                this.putExtra(Intent.EXTRA_TEXT, foodJoke)
+                this.type = "text/plain"
+            }
+            startActivity(shareIntent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
