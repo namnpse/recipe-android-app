@@ -46,6 +46,11 @@ class MainViewModel @ViewModelInject constructor(
             repository.localRecipes.deleteFavoriteRecipe(favoritesEntity)
         }
 
+    private fun addFoodJoke(foodJokeEntity: FoodJokeEntity) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.localRecipes.addFoodJoke(foodJokeEntity)
+        }
+
     fun deleteAllFavoriteRecipes() =
         viewModelScope.launch(Dispatchers.IO) {
             repository.localRecipes.deleteAllFavoriteRecipes()
@@ -133,6 +138,9 @@ class MainViewModel @ViewModelInject constructor(
             try {
                 val response = repository.remoteRecipes.getFoodJoke(apiKey)
                 foodJokeResponse.value = handleFoodJokeResponse(response)
+                foodJokeResponse.value!!.data?.let { foodJoke ->
+                    cacheOfflineFoodJoke(foodJoke)
+                }
             } catch (e: Exception) {
                 foodJokeResponse.value = NetworkResult.Error("Recipes not found")
             }
@@ -157,6 +165,11 @@ class MainViewModel @ViewModelInject constructor(
                 NetworkResult.Error(response.message())
             }
         }
+    }
+
+    private fun cacheOfflineFoodJoke(foodJoke: FoodJoke) {
+        val foodJokeEntity = FoodJokeEntity(foodJoke)
+        addFoodJoke(foodJokeEntity)
     }
 
     private fun hasInternetConnection() = getApplication<Application>().hasInternetConnection()
