@@ -133,9 +133,9 @@ class FavoriteRecipesAdapter(
 
     override fun onCreateActionMode(actionMode: ActionMode?, menu: Menu?): Boolean {
         applyStatusBarColor(R.color.contextualStatusBarColor)
-        actionMode?.let { actionMode ->
-            actionMode.menuInflater?.inflate(R.menu.favorites_menu, menu)
-            this.actionMode = actionMode
+        actionMode?.let { am ->
+            am.menuInflater?.inflate(R.menu.favorites_menu, menu)
+            this.actionMode = am
         }
         return true
     }
