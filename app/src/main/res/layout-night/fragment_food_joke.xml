@@ -12,15 +12,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_food_joke_background_light"
+        android:background="@drawable/ic_food_joke_background_dark"
         tools:context=".ui.fragments.foodjoke.FoodJokeFragment">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/food_joke_cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            remoteFoodJoke="@{mainViewModel.foodJokeResponse}"
-            localFoodJoke="@{mainViewModel.localFoodJoke}"
+            readApiResponse3="@{mainViewModel.foodJokeResponse}"
+            readDatabase3="@{mainViewModel.readFoodJoke}"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:visibility="invisible"
@@ -42,11 +42,14 @@
                     android:id="@+id/food_joke_textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:fontFamily="@font/courgette"
-                    android:textSize="20sp"
+                    android:text="@string/lorem_ipsum"
                     android:textColor="@color/titleColor"
-                    android:text="@string/sample_text"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -54,14 +57,15 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </com.google.android.material.card.MaterialCardView>
 
         <ProgressBar
             android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            remoteFoodJoke="@{mainViewModel.foodJokeResponse}"
-            style="?android:attr/progressBarStyle"
+            readApiResponse3="@{mainViewModel.foodJokeResponse}"
             android:layout_marginBottom="24dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,30 +76,30 @@
             android:id="@+id/food_joke_error_imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            remoteFoodJokeForView="@{mainViewModel.foodJokeResponse}"
-            localFoodJokeForView="@{mainViewModel.localFoodJoke}"
+            readApiResponse4="@{mainViewModel.foodJokeResponse}"
+            readDatabase4="@{mainViewModel.readFoodJoke}"
             android:alpha="0.5"
             android:src="@drawable/ic_sad"
             android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintVertical_bias="0.37" />
 
         <TextView
             android:id="@+id/food_joke_error_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            remoteFoodJokeForView="@{mainViewModel.foodJokeResponse}"
-            localFoodJokeForView="@{mainViewModel.localFoodJoke}"
-            android:text="Error"
+            readApiResponse4="@{mainViewModel.foodJokeResponse}"
+            readDatabase4="@{mainViewModel.readFoodJoke}"
             android:layout_marginTop="8dp"
             android:alpha="0.5"
+            android:text="Error"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="invisible"
-            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/food_joke_error_imageView"
             app:layout_constraintStart_toStartOf="@+id/food_joke_error_imageView"
             app:layout_constraintTop_toBottomOf="@+id/food_joke_error_imageView" />
