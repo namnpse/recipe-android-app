@@ -1,8 +1,12 @@
 package com.namnp.modernfoodrecipeandroidapp.data
 
 import android.content.Context
-import androidx.datastore.DataStore
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.preferencesKey
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_DIET_TYPE
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.PREFERENCES_BACK_ONLINE
