@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,15 +60,18 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
         setHasOptionsMenu(true)
         getRecipes()
 
+//        lifecycleScope.launchWhenStarted { launchWhenStarted is deprecated, use repeatOnLifecycle(Lifecycle.State.STARTED) instead
         lifecycleScope.launch {
-            networkListener = NetworkListener()
-            networkListener.checkNetworkAvailability(requireContext())
-                .collect { status ->
-                    Log.d("NetworkListener", status.toString())
-                    recipesViewModel.networkStatus = status
-                    recipesViewModel.showNetworkStatus()
-                    loadLocalRecipesData()
-                }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                networkListener = NetworkListener()
+                networkListener.checkNetworkAvailability(requireContext())
+                    .collect { status ->
+                        Log.d("NetworkListener", status.toString())
+                        recipesViewModel.networkStatus = status
+                        recipesViewModel.showNetworkStatus()
+                        loadLocalRecipesData()
+                    }
+            }
         }
 
         binding.recipesFab.setOnClickListener {
@@ -119,14 +124,16 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
     // Follow Single Source Of Truth (Check Local -> if empty -> get Remote -> save to local -> display data)
     private fun getRecipes() {
         lifecycleScope.launch {
-            // GET LOCAL FIRST
-            mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
-                if (database.isNotEmpty()) {
-                    recipesAdapter.setData(database.first().foodRecipe)
-                    hideShimmerEffect()
-                } else {
-                    // GET REMOTE
-                    getRemoteRecipes()
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // GET LOCAL FIRST
+                mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
+                    if (database.isNotEmpty()) {
+                        recipesAdapter.setData(database.first().foodRecipe)
+                        hideShimmerEffect()
+                    } else {
+                        // GET REMOTE
+                        getRemoteRecipes()
+                    }
                 }
             }
         }
@@ -134,9 +141,11 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
 
     private fun loadLocalRecipesData() {
         lifecycleScope.launch {
-            mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
-                if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
-                    recipesAdapter.setData(database.first().foodRecipe)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
+                    if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
+                        recipesAdapter.setData(database.first().foodRecipe)
+                    }
                 }
             }
         }

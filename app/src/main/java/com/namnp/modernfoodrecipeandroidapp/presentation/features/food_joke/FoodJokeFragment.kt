@@ -7,7 +7,9 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentFoodJokeBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
@@ -35,14 +37,15 @@ class FoodJokeFragment : Fragment() {
         binding.mainViewModel = mainViewModel
 
         mainViewModel.getFoodJoke()
-        mainViewModel.foodJokeResponse.observe(viewLifecycleOwner, { response ->
-            when(response){
+        mainViewModel.foodJokeResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is NetworkResult.Success -> {
                     binding.foodJokeTextView.text = response.data?.text
                     response.data?.let {
                         foodJoke = it.text
                     }
                 }
+
                 is NetworkResult.Error -> {
                     loadDataFromCache()
                     Toast.makeText(
@@ -51,22 +54,25 @@ class FoodJokeFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
                 is NetworkResult.Loading -> {
                     Log.d("FoodJokeFragment", "Loading")
                 }
             }
-        })
+        }
 
         return binding.root
     }
 
     private fun loadDataFromCache(){
         lifecycleScope.launch {
-            mainViewModel.localFoodJoke.observe(viewLifecycleOwner, { localFoodJoke ->
-                if(!localFoodJoke.isNullOrEmpty()){
-                    binding.foodJokeTextView.text = localFoodJoke.first().foodJoke.text
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.localFoodJoke.observe(viewLifecycleOwner) { localFoodJoke ->
+                    if (!localFoodJoke.isNullOrEmpty()) {
+                        binding.foodJokeTextView.text = localFoodJoke.first().foodJoke.text
+                    }
                 }
-            })
+            }
         }
     }
 
