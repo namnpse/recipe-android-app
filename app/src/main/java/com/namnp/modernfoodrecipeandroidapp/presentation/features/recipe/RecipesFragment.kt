@@ -213,8 +213,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 

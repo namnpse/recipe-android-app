@@ -13,12 +13,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.RECIPE_RESULT_KEY
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
+import com.namnp.modernfoodrecipeandroidapp.databinding.ActivityDetailsBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import com.namnp.modernfoodrecipeandroidapp.presentation.common.PagerAdapter
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.ingredients.IngredientsFragment
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.instructions.InstructionsFragment
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.overview.OverviewFragment
-import kotlinx.android.synthetic.main.activity_details.*
 import java.lang.Exception
 
 class DetailsActivity : AppCompatActivity() {
@@ -28,13 +28,15 @@ class DetailsActivity : AppCompatActivity() {
 
     private var recipeIsSaved = false
     private var savedRecipeId = 0
+    private lateinit var binding: ActivityDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details)
+        binding = ActivityDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setSupportActionBar(toolbar)
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
+        setSupportActionBar(binding.toolbar)
+        binding.toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val fragments = ArrayList<Fragment>()
@@ -57,8 +59,8 @@ class DetailsActivity : AppCompatActivity() {
             supportFragmentManager
         )
 
-        viewPager.adapter = adapter
-        tabLayout.setupWithViewPager(viewPager)
+        binding.viewPager.adapter = adapter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
 
@@ -76,7 +78,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private fun showSnackBar(message: String) {
         Snackbar.make(
-            detailsLayout,
+            binding.detailsLayout,
             message,
             Snackbar.LENGTH_SHORT
         )
@@ -89,7 +91,7 @@ class DetailsActivity : AppCompatActivity() {
     }
 
     private fun checkSavedRecipes(menuItem: MenuItem) {
-        mainViewModel.localFavoriteRecipes.observe(this, { favoritesEntity ->
+        mainViewModel.localFavoriteRecipes.observe(this) { favoritesEntity ->
             try {
                 for (savedRecipe in favoritesEntity) {
                     if (savedRecipe.result.recipeId == args.result.recipeId) {
@@ -103,7 +105,7 @@ class DetailsActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.d("DetailsActivity", e.message.toString())
             }
-        })
+        }
     }
 
     private fun removeRecipeFromFavorites(item: MenuItem) {
