@@ -15,7 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class FavoriteRecipesFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by viewModels()
-    private val favoriteRecipesAdapter: FavoriteRecipesAdapter by lazy { FavoriteRecipesAdapter(requireActivity(), mainViewModel) }
+    private val favoriteRecipesAdapter: FavoriteRecipesAdapter by lazy {
+        FavoriteRecipesAdapter(requireActivity(), mainViewModel)
+    }
 
     private var _binding: FragmentFavoriteRecipesBinding? = null
     private val binding get() = _binding!!
@@ -67,8 +69,8 @@ class FavoriteRecipesFragment : Fragment() {
             .show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         favoriteRecipesAdapter.clearContextualActionMode()
     }
