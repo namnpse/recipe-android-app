@@ -16,7 +16,14 @@ class FavoriteRecipesFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val favoriteRecipesAdapter: FavoriteRecipesAdapter by lazy {
-        FavoriteRecipesAdapter(requireActivity(), mainViewModel)
+        FavoriteRecipesAdapter(
+            requireActivity(),
+            onDeleteFavoriteRecipe = { selectedRecipes ->
+                selectedRecipes.forEach {
+                    mainViewModel.deleteFavoriteRecipe(it)
+                }
+            },
+        )
     }
 
     private var _binding: FragmentFavoriteRecipesBinding? = null

@@ -10,13 +10,12 @@ import com.google.android.material.snackbar.Snackbar
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
 import com.namnp.modernfoodrecipeandroidapp.databinding.FavoriteRecipeItemBinding
-import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.RecipesDiffUtil
 import kotlinx.android.synthetic.main.favorite_recipe_item.view.*
 
 class FavoriteRecipesAdapter(
     private val requireActivity: FragmentActivity,
-    private val mainViewModel: MainViewModel,
+    private val onDeleteFavoriteRecipe: ((ArrayList<FavoritesEntity>) -> Unit)?,
 ) : RecyclerView.Adapter<FavoriteRecipesAdapter.RecipeViewHolder>(), ActionMode.Callback {
 
     private var favoriteRecipes = emptyList<FavoritesEntity>()
@@ -148,8 +147,8 @@ class FavoriteRecipesAdapter(
 
     override fun onActionItemClicked(actionMode: ActionMode?, menu: MenuItem?): Boolean {
         if(menu?.itemId == R.id.delete_favorite_recipe_menu){
-            selectedRecipes.forEach {
-                mainViewModel.deleteFavoriteRecipe(it)
+            if(selectedRecipes.isNotEmpty()) {
+                onDeleteFavoriteRecipe?.invoke(selectedRecipes)
             }
             showSnackBar("${selectedRecipes.size} Recipe(s) removed.")
             isMultiSelection = false
