@@ -123,30 +123,24 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
 
     // Follow Single Source Of Truth (Check Local -> if empty -> get Remote -> save to local -> display data)
     private fun getRecipes() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // GET LOCAL FIRST
-                mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
-                    if (database.isNotEmpty()) {
-                        recipesAdapter.setData(database.first().foodRecipe)
-                        hideShimmerEffect()
-                    } else {
-                        // GET REMOTE
-                        getRemoteRecipes()
-                    }
-                }
+//            repeatOnLifecycle(Lifecycle.State.STARTED) { // don't need, live data already have own its lifecycle awareness, use it for flow
+        // GET LOCAL FIRST
+        mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty()) {
+                recipesAdapter.setData(database.first().foodRecipe)
+                hideShimmerEffect()
+            } else {
+                // GET REMOTE
+                getRemoteRecipes()
             }
         }
+//            }
     }
 
     private fun loadLocalRecipesData() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
-                    if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
-                        recipesAdapter.setData(database.first().foodRecipe)
-                    }
-                }
+        mainViewModel.localRecipes.observeOnce(viewLifecycleOwner) { database ->
+            if (database.isNotEmpty() && !navArgs.backFromBottomSheet) {
+                recipesAdapter.setData(database.first().foodRecipe)
             }
         }
     }
@@ -179,7 +173,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchView.OnQueryT
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        if(query != null) {
+        if (query != null) {
             searchRecipeData(query)
         }
         return true

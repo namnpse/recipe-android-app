@@ -7,15 +7,11 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentFoodJokeBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.MainViewModel
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoodJokeFragment : Fragment() {
@@ -64,14 +60,10 @@ class FoodJokeFragment : Fragment() {
         return binding.root
     }
 
-    private fun loadDataFromCache(){
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mainViewModel.localFoodJoke.observe(viewLifecycleOwner) { localFoodJoke ->
-                    if (!localFoodJoke.isNullOrEmpty()) {
-                        binding.foodJokeTextView.text = localFoodJoke.first().foodJoke.text
-                    }
-                }
+    private fun loadDataFromCache() {
+        mainViewModel.localFoodJoke.observe(viewLifecycleOwner) { localFoodJoke ->
+            if (!localFoodJoke.isNullOrEmpty()) {
+                binding.foodJokeTextView.text = localFoodJoke.first().foodJoke.text
             }
         }
     }
@@ -81,7 +73,7 @@ class FoodJokeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.share_food_joke_menu){
+        if (item.itemId == R.id.share_food_joke_menu) {
             val shareIntent = Intent().apply {
                 this.action = Intent.ACTION_SEND
                 this.putExtra(Intent.EXTRA_TEXT, foodJoke)
