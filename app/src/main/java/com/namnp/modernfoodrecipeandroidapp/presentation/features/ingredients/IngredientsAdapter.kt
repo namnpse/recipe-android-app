@@ -12,7 +12,7 @@ import com.namnp.modernfoodrecipeandroidapp.databinding.IngredientItemBinding
 import com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe.RecipesDiffUtil
 import java.util.*
 
-class IngredientsAdapter: RecyclerView.Adapter<IngredientsAdapter.MyViewHolder>() {
+class IngredientsAdapter : RecyclerView.Adapter<IngredientsAdapter.MyViewHolder>() {
 
     private var ingredientsList = emptyList<ExtendedIngredient>()
 
@@ -20,7 +20,13 @@ class IngredientsAdapter: RecyclerView.Adapter<IngredientsAdapter.MyViewHolder>(
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder(IngredientItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return MyViewHolder(
+            IngredientItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -28,7 +34,11 @@ class IngredientsAdapter: RecyclerView.Adapter<IngredientsAdapter.MyViewHolder>(
             crossfade(600)
             error(R.drawable.ic_error_placeholder)
         }
-        holder.binding.ingredientName.text = ingredientsList[position].name.capitalize(Locale.ROOT)
+        holder.binding.ingredientName.text = ingredientsList[position].name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(
+                Locale.ROOT
+            ) else it.toString()
+        }
         holder.binding.ingredientAmount.text = ingredientsList[position].amount.toString()
         holder.binding.ingredientUnit.text = ingredientsList[position].unit
         holder.binding.ingredientConsistency.text = ingredientsList[position].consistency
