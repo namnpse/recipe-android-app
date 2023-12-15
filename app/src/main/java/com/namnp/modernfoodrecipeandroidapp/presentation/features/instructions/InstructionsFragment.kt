@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
-import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.data.models.Result
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentInstructionsBinding
+import com.namnp.modernfoodrecipeandroidapp.util.retrieveParcelable
 
 class InstructionsFragment : Fragment() {
 
@@ -25,11 +25,13 @@ class InstructionsFragment : Fragment() {
         _binding = FragmentInstructionsBinding.inflate(layoutInflater)
 
         val args = arguments
-        val myBundle: Result? = args?.getParcelable(Constants.RECIPE_RESULT_KEY)
+        val bundle: Result? = args?.retrieveParcelable(Constants.RECIPE_RESULT_KEY)
 
-        binding.instructionsWebView.webViewClient = object : WebViewClient() {}
-        val websiteUrl: String = myBundle!!.sourceUrl
-        binding.instructionsWebView.loadUrl(websiteUrl)
+        bundle?.let {
+            binding.instructionsWebView.webViewClient = object : WebViewClient() {}
+            val websiteUrl: String = it.sourceUrl
+            binding.instructionsWebView.loadUrl(websiteUrl)
+        }
 
         return binding.root
     }

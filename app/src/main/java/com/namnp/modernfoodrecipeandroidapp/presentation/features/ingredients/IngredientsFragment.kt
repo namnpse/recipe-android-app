@@ -9,6 +9,7 @@ import com.namnp.modernfoodrecipeandroidapp.data.models.Result
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.RECIPE_RESULT_KEY
 import com.namnp.modernfoodrecipeandroidapp.databinding.FragmentIngredientsBinding
+import com.namnp.modernfoodrecipeandroidapp.util.retrieveParcelable
 
 class IngredientsFragment : Fragment() {
 
@@ -22,7 +23,7 @@ class IngredientsFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentIngredientsBinding.inflate(layoutInflater)
-        val recipeBundle: Result? = arguments?.getParcelable(RECIPE_RESULT_KEY)
+        val recipeBundle: Result? = arguments?.retrieveParcelable(RECIPE_RESULT_KEY)
         setupRecyclerView()
         recipeBundle?.extendedIngredients?.let { ingredientsAdapter.setData(it) }
 
