@@ -112,6 +112,13 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchViewAndroidX.
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.recyclerViewState?.let { state ->
+            binding.shimmerRecyclerView.layoutManager?.onRestoreInstanceState(state)
+        }
+    }
+
     private fun getRemoteRecipes() {
         mainViewModel.getRecipes(recipesViewModel.getQueries())
         mainViewModel.recipesResponse.observe(viewLifecycleOwner) { response ->
@@ -225,6 +232,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchViewAndroidX.
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mainViewModel.recyclerViewState =
+            binding.shimmerRecyclerView.layoutManager?.onSaveInstanceState()
         _binding = null
     }
 

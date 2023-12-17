@@ -1,6 +1,7 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation
 
 import android.app.Application
+import android.os.Parcelable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -30,6 +31,7 @@ class MainViewModel @ViewModelInject constructor(
     val localRecipes: LiveData<List<RecipesEntity>> = repository.localRecipes.getRecipes().asLiveData()
     val localFavoriteRecipes: LiveData<List<FavoritesEntity>> = repository.localRecipes.getFavoriteRecipes().asLiveData()
     val localFoodJoke: LiveData<List<FoodJokeEntity>> = repository.localRecipes.getFoodJoke().asLiveData()
+    var recyclerViewState: Parcelable? = null
 
     private fun addRecipes(recipesEntity: RecipesEntity) =
         viewModelScope.launch(Dispatchers.IO) {
