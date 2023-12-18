@@ -3,6 +3,7 @@ package com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesEntity
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
@@ -12,36 +13,22 @@ class RecipesFragmentBindingAdapter {
 
     companion object {
 
-        @BindingAdapter("bindRemoteDataToImageView", "bindLocalDataToImageView", requireAll = true)
+        @BindingAdapter("apiResponse", "localData", requireAll = true)
         @JvmStatic
-        fun errorImageViewVisibility(
-            imageView: ImageView,
+        fun handleReadDataErrors(
+            view: View,
             apiResponse: NetworkResult<FoodRecipe>?,
-            database: List<RecipesEntity>?
+            localData: List<RecipesEntity>?
         ) {
-            if (apiResponse is NetworkResult.Error && database.isNullOrEmpty()) {
-                imageView.visibility = View.VISIBLE
-            } else if (apiResponse is NetworkResult.Loading) {
-                imageView.visibility = View.INVISIBLE
-            } else if (apiResponse is NetworkResult.Success) {
-                imageView.visibility = View.INVISIBLE
-            }
-        }
+            when (view) {
+                is ImageView -> {
+                    view.isVisible = apiResponse is NetworkResult.Error && localData.isNullOrEmpty()
+                }
 
-        @BindingAdapter("bindRemoteDataToTextView", "bindLocalDataToTextView", requireAll = true)
-        @JvmStatic
-        fun errorTextViewVisibility(
-            textView: TextView,
-            apiResponse: NetworkResult<FoodRecipe>?,
-            localRecipes: List<RecipesEntity>?
-        ) {
-            if (apiResponse is NetworkResult.Error && localRecipes.isNullOrEmpty()) {
-                textView.visibility = View.VISIBLE
-                textView.text = apiResponse.message.toString()
-            } else if (apiResponse is NetworkResult.Loading) {
-                textView.visibility = View.INVISIBLE
-            } else if (apiResponse is NetworkResult.Success) {
-                textView.visibility = View.INVISIBLE
+                is TextView -> {
+                    view.isVisible = apiResponse is NetworkResult.Error && localData.isNullOrEmpty()
+                    view.text = apiResponse?.message.toString()
+                }
             }
         }
 

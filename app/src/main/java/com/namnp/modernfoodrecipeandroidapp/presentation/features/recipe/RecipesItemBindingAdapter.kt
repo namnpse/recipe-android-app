@@ -20,14 +20,13 @@ class RecipesItemBindingAdapter {
         @JvmStatic
         @BindingAdapter("onRecipeClickListener")
         fun onRecipeClickListener(recipeRowLayout: ConstraintLayout, result: Result) {
-            Log.d("onRecipeClickListener", "CALLED")
             recipeRowLayout.setOnClickListener {
                 try {
                     val action =
                         RecipesFragmentDirections.actionRecipesFragmentToDetailsActivity(result)
                     recipeRowLayout.findNavController().navigate(action)
                 } catch (e: Exception) {
-                    Log.d("onRecipeClickListener", e.toString())
+                    e.printStackTrace()
                 }
             }
         }
@@ -39,18 +38,6 @@ class RecipesItemBindingAdapter {
                 crossfade(600)
                 error(R.drawable.ic_placeholder)
             }
-        }
-
-        @JvmStatic
-        @BindingAdapter("setNumberOfLikes")
-        fun setNumberOfLikes(textView: TextView, likes: Int){
-            textView.text = likes.toString()
-        }
-
-        @JvmStatic
-        @BindingAdapter("setNumberOfMinutes")
-        fun setNumberOfMinutes(textView: TextView, minutes: Int){
-            textView.text = minutes.toString()
         }
 
         @JvmStatic
