@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SearchView as SearchViewAndroidX
 
 @ExperimentalCoroutinesApi
-class RecipesFragment : Fragment(R.layout.fragment_recipes), SearchViewAndroidX.OnQueryTextListener {
+class RecipesFragment : Fragment(R.layout.fragment_recipes),
+    SearchViewAndroidX.OnQueryTextListener {
 
     private lateinit var mainViewModel: MainViewModel
     private val recipesAdapter by lazy { RecipesAdapter() }
