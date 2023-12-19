@@ -2,10 +2,10 @@ package com.namnp.modernfoodrecipeandroidapp.data
 
 import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesLocalDataSource
 import com.namnp.modernfoodrecipeandroidapp.data.remote.RecipesRemoteDataSource
-import dagger.hilt.android.scopes.ActivityRetainedScoped
+import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ActivityRetainedScoped
+@ViewModelScoped
 class FoodRecipesRepository @Inject constructor(
     remoteDataSource: RecipesRemoteDataSource,
     localDataSource: RecipesLocalDataSource

@@ -2,7 +2,6 @@ package com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe
 
 import android.app.Application
 import android.widget.Toast
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,11 +17,13 @@ import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_N
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_SEARCH
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_TYPE
 import com.namnp.modernfoodrecipeandroidapp.data.DataStoreRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-class RecipesViewModel @ViewModelInject constructor(
+@HiltViewModel
+class RecipesViewModel @Inject constructor(
     application: Application,
     private val dataStoreRepository: DataStoreRepository
 ) : AndroidViewModel(application) {
