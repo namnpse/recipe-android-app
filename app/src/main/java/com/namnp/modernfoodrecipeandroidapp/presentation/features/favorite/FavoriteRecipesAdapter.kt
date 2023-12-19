@@ -78,7 +78,7 @@ class FavoriteRecipesAdapter(
                 applySelection(holder, currentRecipe)
                 true
             } else {
-                isMultiSelection = false
+                applySelection(holder, currentRecipe)
                 false
             }
         }
@@ -117,6 +117,7 @@ class FavoriteRecipesAdapter(
         actionMode?.let { actionMode ->
             when(selectedRecipes.size) {
                 0 -> {
+                    isMultiSelection = false
                     actionMode.finish()
                 }
                 1 -> {
