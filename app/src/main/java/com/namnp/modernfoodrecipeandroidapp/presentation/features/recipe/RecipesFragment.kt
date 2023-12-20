@@ -116,7 +116,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
     override fun onResume() {
         super.onResume()
         mainViewModel.recyclerViewState?.let { state ->
-            binding.shimmerRecyclerView.layoutManager?.onRestoreInstanceState(state)
+            binding.recicpeRecyclerView.layoutManager?.onRestoreInstanceState(state)
         }
     }
 
@@ -153,7 +153,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
         mainViewModel.localRecipes.observe(viewLifecycleOwner) { database ->
             if (database.isNotEmpty()) {
                 recipesAdapter.setData(database.first().foodRecipe)
-                hideShimmerEffect()
             } else {
                 // GET REMOTE
                 getRemoteRecipes()
@@ -179,17 +178,23 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
     }
 
     private fun setupRecyclerView() {
-        binding.shimmerRecyclerView.adapter = recipesAdapter
-        binding.shimmerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recicpeRecyclerView.apply {
+            adapter = recipesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
         showShimmerEffect()
     }
 
     private fun showShimmerEffect() {
-        binding.shimmerRecyclerView.showShimmer()
+        binding.recicpeRecyclerView.visibility = View.VISIBLE
+        binding.recicpeRecyclerView.visibility = View.GONE
+        binding.shimmerFrameLayout.startShimmer()
     }
 
     private fun hideShimmerEffect() {
-        binding.shimmerRecyclerView.hideShimmer()
+        binding.shimmerFrameLayout.stopShimmer()
+        binding.shimmerFrameLayout.visibility = View.GONE
+        binding.recicpeRecyclerView.visibility = View.VISIBLE
     }
 
     override fun onQueryTextChange(p0: String?): Boolean {
@@ -234,7 +239,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
     override fun onDestroyView() {
         super.onDestroyView()
         mainViewModel.recyclerViewState =
-            binding.shimmerRecyclerView.layoutManager?.onSaveInstanceState()
+            binding.recicpeRecyclerView.layoutManager?.onSaveInstanceState()
         _binding = null
     }
 

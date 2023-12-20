@@ -51,8 +51,8 @@ class OverviewFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateColors(stateIsOn: Boolean, textView: TextView, imageView: ImageView) {
-        if (stateIsOn) {
+    private fun updateColors(isSelected: Boolean, textView: TextView, imageView: ImageView) {
+        if (isSelected) {
             imageView.setColorFilter(ContextCompat.getColor(requireContext(),R.color.green))
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
         }
