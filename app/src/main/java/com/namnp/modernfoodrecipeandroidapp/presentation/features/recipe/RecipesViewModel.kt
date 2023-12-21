@@ -6,8 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
-import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_DIET_TYPE
-import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_MEAL_TYPE
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_RECIPES_NUMBER
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_ADD_RECIPE_INFORMATION
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_API_KEY
