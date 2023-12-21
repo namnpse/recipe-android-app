@@ -127,6 +127,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
                 is NetworkResult.Success -> {
                     hideShimmerEffect()
                     response.data?.let { recipesAdapter.setData(it) }
+                    recipesViewModel.saveMealAndDietType()
                 }
 
                 is NetworkResult.Error -> {

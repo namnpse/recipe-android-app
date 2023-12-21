@@ -17,6 +17,7 @@ import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_N
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_SEARCH
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_TYPE
 import com.namnp.modernfoodrecipeandroidapp.data.DataStoreRepository
+import com.namnp.modernfoodrecipeandroidapp.data.MealAndDietType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,36 +29,44 @@ class RecipesViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : AndroidViewModel(application) {
 
-    private var mealType = DEFAULT_MEAL_TYPE
-    private var dietType = DEFAULT_DIET_TYPE
-
+    private var tempMealAndDiet: MealAndDietType? = null
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
-
     var isBackOnline = false
     var networkStatus = false
     val getBackOnlineStatus = dataStoreRepository.readBackOnline.asLiveData()
 
-    fun saveMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) =
+    fun saveMealAndDietType() =
         viewModelScope.launch(Dispatchers.IO) {
-            dataStoreRepository.saveMealAndDietType(mealType, mealTypeId, dietType, dietTypeId)
+            tempMealAndDiet?.let {
+                dataStoreRepository.saveMealAndDietType(
+                    it.selectedMealType,
+                    it.selectedMealTypeId,
+                    it.selectedDietType,
+                    it.selectedDietTypeId
+                )
+            }
         }
+
+    fun saveTemporaryMealAndDietType(mealType: String, mealTypeId: Int, dietType: String, dietTypeId: Int) {
+        tempMealAndDiet = MealAndDietType(
+            mealType,
+            mealTypeId,
+            dietType,
+            dietTypeId
+        )
+    }
 
     fun getQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
 
-        viewModelScope.launch {
-            readMealAndDietType.collect { value ->
-                mealType = value.selectedMealType
-                dietType = value.selectedDietType
-            }
-        }
-
         queries[QUERY_NUMBER] = DEFAULT_RECIPES_NUMBER
         queries[QUERY_API_KEY] = API_KEY
-        queries[QUERY_TYPE] = mealType
-        queries[QUERY_DIET] = dietType
         queries[QUERY_ADD_RECIPE_INFORMATION] = "true"
         queries[QUERY_FILL_INGREDIENTS] = "true"
+        tempMealAndDiet?.let {
+            queries[QUERY_TYPE] = it.selectedMealType
+            queries[QUERY_DIET] = it.selectedDietType
+        }
 
         return queries
     }
