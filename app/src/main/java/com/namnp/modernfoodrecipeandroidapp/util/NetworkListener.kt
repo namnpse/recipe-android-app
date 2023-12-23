@@ -19,7 +19,7 @@ class NetworkListener : ConnectivityManager.NetworkCallback() {
         connectivityManager.registerDefaultNetworkCallback(this)
 
         val network = connectivityManager.activeNetwork
-        network?.let {
+        if(network == null) {
             isNetworkAvailable.value = false
             return isNetworkAvailable
         }
