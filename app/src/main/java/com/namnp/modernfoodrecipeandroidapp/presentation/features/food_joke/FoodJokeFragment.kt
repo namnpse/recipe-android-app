@@ -68,7 +68,7 @@ class FoodJokeFragment : Fragment() {
                     loadDataFromCache()
                     Toast.makeText(
                         requireContext(),
-                        response.message.toString(),
+                        response.message?.asString(requireContext()) ?: "",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
 import com.namnp.modernfoodrecipeandroidapp.data.FoodRecipesRepository
 import com.namnp.modernfoodrecipeandroidapp.data.local.FavoritesEntity
@@ -15,6 +16,7 @@ import com.namnp.modernfoodrecipeandroidapp.data.local.RecipesEntity
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodJoke
 import com.namnp.modernfoodrecipeandroidapp.data.models.FoodRecipe
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
+import com.namnp.modernfoodrecipeandroidapp.util.UiText
 import com.namnp.modernfoodrecipeandroidapp.util.hasInternetConnection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -85,30 +87,30 @@ class MainViewModel @Inject constructor(
                     cacheRecipesToLocal(foodRecipe)
                 }
             } catch (e: Exception) {
-                recipesResponse.value = NetworkResult.Error("Can not found the recipe.")
+                recipesResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_recipes_not_found))
             }
         } else {
-            recipesResponse.value = NetworkResult.Error("No Internet Connection.")
+            recipesResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_no_internet_connection))
         }
     }
 
     private fun handleFoodRecipesResponse(response: Response<FoodRecipe>): NetworkResult<FoodRecipe> {
         when {
             response.message().toString().contains("timeout") -> {
-                return NetworkResult.Error("Timeout")
+                return NetworkResult.Error(UiText.StringResource(R.string.error_timeout))
             }
             response.code() == 402 -> {
-                return NetworkResult.Error("API Key Limited.")
+                return NetworkResult.Error(UiText.StringResource(R.string.error_api_key_limited))
             }
             response.body()!!.results.isEmpty() -> {
-                return NetworkResult.Error("Recipes not found.")
+                return NetworkResult.Error(UiText.StringResource(R.string.error_recipes_not_found))
             }
             response.isSuccessful -> {
                 val foodRecipes = response.body()
                 return NetworkResult.Success(foodRecipes!!)
             }
             else -> {
-                return NetworkResult.Error(response.message())
+                return NetworkResult.Error(UiText.PureString(response.message()))
             }
         }
     }
@@ -125,10 +127,10 @@ class MainViewModel @Inject constructor(
                 val response = repository.remoteRecipes.searchRecipes(searchQuery)
                 searchedRecipesResponse.value = handleFoodRecipesResponse(response)
             } catch (e: Exception) {
-                searchedRecipesResponse.value = NetworkResult.Error("Can not found the recipe.")
+                searchedRecipesResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_recipes_not_found))
             }
         } else {
-            searchedRecipesResponse.value = NetworkResult.Error("No Internet Connection.")
+            searchedRecipesResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_no_internet_connection))
         }
     }
 
@@ -146,10 +148,10 @@ class MainViewModel @Inject constructor(
                     cacheOfflineFoodJoke(foodJoke)
                 }
             } catch (e: Exception) {
-                foodJokeResponse.value = NetworkResult.Error("Recipes not found")
+                foodJokeResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_recipes_not_found))
             }
         } else {
-            foodJokeResponse.value = NetworkResult.Error("No Internet Connection")
+            foodJokeResponse.value = NetworkResult.Error(UiText.StringResource(R.string.error_no_internet_connection))
         }
     }
 
@@ -160,13 +162,13 @@ class MainViewModel @Inject constructor(
                 NetworkResult.Success(foodJoke!!)
             }
             response.code() == 402 -> {
-                NetworkResult.Error("API Key Limited.")
+                NetworkResult.Error(UiText.StringResource(R.string.error_api_key_limited))
             }
             response.message().toString().contains("timeout") -> {
-                NetworkResult.Error("Timeout")
+                NetworkResult.Error(UiText.StringResource(R.string.error_timeout))
             }
             else -> {
-                NetworkResult.Error(response.message())
+                NetworkResult.Error(UiText.PureString(response.message()))
             }
         }
     }
