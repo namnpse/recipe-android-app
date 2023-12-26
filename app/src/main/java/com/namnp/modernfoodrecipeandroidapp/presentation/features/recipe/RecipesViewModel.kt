@@ -1,10 +1,9 @@
 package com.namnp.modernfoodrecipeandroidapp.presentation.features.recipe
 
-import android.app.Application
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.namnp.modernfoodrecipeandroidapp.R
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.API_KEY
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.DEFAULT_RECIPES_NUMBER
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_ADD_RECIPE_INFORMATION
@@ -16,22 +15,26 @@ import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_S
 import com.namnp.modernfoodrecipeandroidapp.constant.Constants.Companion.QUERY_TYPE
 import com.namnp.modernfoodrecipeandroidapp.data.DataStoreRepository
 import com.namnp.modernfoodrecipeandroidapp.data.MealAndDietType
+import com.namnp.modernfoodrecipeandroidapp.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipesViewModel @Inject constructor(
-    application: Application,
     private val dataStoreRepository: DataStoreRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private var tempMealAndDiet: MealAndDietType? = null
     val readMealAndDietType = dataStoreRepository.readMealAndDietType
     var isBackOnline = false
     var networkStatus = false
     val getBackOnlineStatus = dataStoreRepository.readBackOnline.asLiveData()
+
+    var sharedFlowEvent = MutableSharedFlow<UiText>()
+        private set
 
     fun saveMealAndDietType() =
         viewModelScope.launch(Dispatchers.IO) {
@@ -70,13 +73,15 @@ class RecipesViewModel @Inject constructor(
     }
 
     fun showNetworkStatus() {
-        if (!networkStatus) {
-            Toast.makeText(getApplication(), "No Internet Connection.", Toast.LENGTH_SHORT).show()
-            saveBackOnline(true)
-        } else {
-            if (isBackOnline) {
-                Toast.makeText(getApplication(), "Back online.", Toast.LENGTH_SHORT).show()
-                saveBackOnline(false)
+        viewModelScope.launch {
+            if (!networkStatus) {
+                sharedFlowEvent.emit(UiText.StringResource(R.string.error_no_internet_connection))
+                saveBackOnline(true)
+            } else {
+                if (isBackOnline) {
+                    sharedFlowEvent.emit(UiText.StringResource(R.string.back_online))
+                    saveBackOnline(false)
+                }
             }
         }
     }

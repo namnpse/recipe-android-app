@@ -50,4 +50,6 @@
     <string name="error_api_key_limited">API Key Limited</string>
     <string name="error_no_internet_connection">No Internet Connection</string>
     <string name="error_recipes_not_found">Recipes not found</string>
+
+    <string name="back_online">Back online</string>
 </resources>
