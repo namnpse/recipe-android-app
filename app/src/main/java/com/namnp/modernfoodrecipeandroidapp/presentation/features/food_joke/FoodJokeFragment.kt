@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.namnp.modernfoodrecipeandroidapp.R
@@ -19,7 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class FoodJokeFragment : Fragment() {
 
-    private val mainViewModel by viewModels<MainViewModel>()
+//    private val mainViewModel: MainViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     private var _binding: FragmentFoodJokeBinding? = null
     private val binding get() = _binding!!
@@ -96,3 +98,6 @@ class FoodJokeFragment : Fragment() {
     }
 
 }
+
+// https://stackoverflow.com/questions/54313453/how-to-instantiate-viewmodel-in-androidx
+// https://stackoverflow.com/questions/65352324/view-model-initialization-using-by-viewmodels-vs-viewmodelproviderthis-ge

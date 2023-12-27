@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +28,7 @@ import com.namnp.modernfoodrecipeandroidapp.util.NetworkListener
 import com.namnp.modernfoodrecipeandroidapp.util.NetworkResult
 import com.namnp.modernfoodrecipeandroidapp.util.observeOnce
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SearchView as SearchViewAndroidX
 
@@ -33,9 +36,11 @@ import androidx.appcompat.widget.SearchView as SearchViewAndroidX
 class RecipesFragment : Fragment(R.layout.fragment_recipes),
     SearchViewAndroidX.OnQueryTextListener {
 
-    private lateinit var mainViewModel: MainViewModel
+//    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by viewModels()
     private val recipesAdapter by lazy { RecipesAdapter() }
-    private lateinit var recipesViewModel: RecipesViewModel
+//    private lateinit var recipesViewModel: RecipesViewModel
+    private val recipesViewModel: RecipesViewModel by viewModels()
 
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
@@ -47,8 +52,8 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-        recipesViewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
+//        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+//        recipesViewModel = ViewModelProvider(this)[RecipesViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -84,6 +89,9 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
         //        lifecycleScope.launchWhenStarted { launchWhenStarted is deprecated, use repeatOnLifecycle(Lifecycle.State.STARTED) instead
         lifecycleScope.launch {
             repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+                recipesViewModel.sharedFlowEvent.collectLatest { message ->
+                    Toast.makeText(requireContext(), message.asString(requireContext()), Toast.LENGTH_SHORT).show()
+                }
                 networkListener = NetworkListener()
                 networkListener.checkNetworkAvailability(requireContext())
                     .collect { status ->
@@ -93,6 +101,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes),
                         loadLocalRecipesData()
                     }
             }
+
         }
 
         binding.recipesFab.setOnClickListener {
